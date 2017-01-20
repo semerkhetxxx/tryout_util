@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="idv.users.model.UserDAO">
+
+  <resultMap type='UserVO' id='UserResult'>
+    <id property='userNo' column='eu_id'/>
+    <result property='userName' column='eu_name'/>
+    <result property='userPw' column='eu_password'/>
+    <result property='userPic' column='eu_image'/>
+  </resultMap>
+
+  <select id='getUserByNo' parameterType='int' resultMap='UserResult'>
+     select * from exe_users where eu_id = #{userNo}
+  </select>
+  
+  <select id='getUserByName' parameterType='String' resultMap='UserResult'>
+     select * from exe_users where eu_name = #{userName}
+  </select>
+
+  <select id='getAllUsers' resultMap='UserResult'>
+   select * from exe_users
+  </select>
+
+  <insert id='insertUser' parameterType='UserVO' useGeneratedKeys='true' keyProperty='userNo'>
+   insert into exe_users  (eu_name, eu_password, eu_image) values (#{userName},#{userPw},#{userPic})
+  </insert>
+
+  <update id='updateUser' parameterType='UserVO'>
+    update exe_users
+      set eu_name=#{userName},
+          eu_password=#{userPw},
+          eu_image=#{userPic}
+    where eu_id=#{userNo}
+  </update>
+
+  <delete id='deleteUser' parameterType='int'>
+    delete from exe_users where eu_id=#{userNo}
+  </delete>
+
+</mapper>
+
+

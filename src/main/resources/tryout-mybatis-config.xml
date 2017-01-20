@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="UserVO" type="idv.tryout.model.UserVO" />
+		<typeAlias alias="ReplyVO" type="idv.tryout.model.ReplyVO" />
+		<typeAlias alias="ArticleVO" type="idv.tryout.model.ArticleVO" />		
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="idv/tryout/dao/sql/UserMapper.xml" />
+		<mapper resource="idv/tryout/dao/sql/ReplyMapper.xml" />
+		<mapper resource="idv/tryout/dao/sql/ArticleMapper.xml" />		
+	</mappers>
+
+</configuration>
+
+

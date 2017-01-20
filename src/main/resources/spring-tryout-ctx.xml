@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+						   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Scans for application @Components to deploy -->
+<!-- 	<context:component-scan base-package="pubgame" /> -->
+
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+	<bean id="eventDS" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/tryout_1?useUnicode=true&amp;characterEncoding=utf-8</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>stardust</value>
+		</property>
+		<property name="maxActive">
+			<value>10</value>
+		</property>
+		<property name="maxIdle">
+			<value>2</value>
+		</property>
+		<property name="minIdle">
+			<value>0</value>
+		</property>
+		<property name="maxWait">
+			<value>10000</value>
+		</property>
+		<property name="timeBetweenEvictionRunsMillis">
+			<value>1800000</value>
+		</property>
+		<property name="minEvictableIdleTimeMillis">
+			<value>3600000</value>
+		</property>
+	</bean>
+
+	<bean id="eventSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation"
+			value="classpath:tryout-mybatis-config.xml" />
+		<property name="dataSource" ref="eventDS" />
+	</bean>
+
+	<bean id="userDao" class="idv.tryout.dao.UserDAO">
+		<property name="sqlSessionFactory" ref="eventSqlSessionFactory" />
+	</bean>
+	
+	<bean id="replyDao" class="idv.tryout.dao.ReplyDAO">
+		<property name="sqlSessionFactory" ref="eventSqlSessionFactory" />
+	</bean>
+	
+	<bean id="atcDao" class="idv.tryout.dao.ArticleDAO">
+		<property name="sqlSessionFactory" ref="eventSqlSessionFactory" />
+	</bean>	
+	
+    <!-- Service Object -->
+    <bean id="tryoutService" class="idv.tryout.service.impl.TryoutServiceImpl">
+        <property name="userDao">
+            <ref bean="userDao"/>
+        </property>
+        <property name="replyDao">
+            <ref bean="replyDao"/>
+        </property>
+        <property name="atcDao">
+            <ref bean="atcDao"/>
+        </property>                 
+    </bean>    	
+	
+	
+</beans>
+
+
+
+

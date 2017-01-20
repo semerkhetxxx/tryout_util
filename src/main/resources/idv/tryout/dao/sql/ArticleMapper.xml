@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="idv.articles.model.ArticleDAO">
+
+  <!-- Instead of referencing Fully Qualified Class Names we can register Aliases in mybatis-config.xml and use Alias names. -->
+  <resultMap type='ArticleVO' id='ArticleResult'>
+    <id property='atcId' column='ea_id'/>
+    <result property='atcTitle' column='ea_title'/>
+    <result property='atcCnt' column='ea_content'/>
+    <result property='atcPic' column='ea_image'/>
+    <result property='atcAuthor' column='ea_author'/>
+    <result property='atcSize' column='ea_extra_info1'/>
+          
+  </resultMap>
+  
+  <select id='getArticleById' parameterType='Integer' resultType='ArticleVO'>
+     select * from exe_articles where ea_id = #{atcId}
+  </select>
+  
+  <select id='getArticleByUser' parameterType='Integer' resultMap='ArticleResult'>
+     select * from exe_articles where ea_author = #{atcAuthor}
+  </select>
+  
+  <select id='getArticleByTitle' parameterType='String' resultType='ArticleVO'>
+     select * from exe_articles where ea_title = #{atcTitle}
+  </select>
+  
+  <select id='getArticleWallInfoByUser' parameterType='Integer' resultType='map'>
+  	select ea_id, count(er_article) as reply_count, ea_title, ea_extra_info1, ea_image
+  	from exe_articles left outer join exe_replies
+	on ea_id = er_article
+	where ea_article = #{userNo}
+	group by ea_id
+  </select>  
+
+  <select id='getAllArticles' resultMap='ArticleResult'>
+   select * from exe_articles
+  </select>
+
+  <insert id='insertArticle' parameterType='ArticleVO'>
+   insert into exe_articles (ea_title, ea_content, ea_image, ea_author, ea_extra_info1)
+   values (#{atcTitle},#{atcCnt},#{atcPic},#{atcAuthor},#{atcSize})
+  </insert>
+
+  <update id='updateArticle' parameterType='ArticleVO'>
+    update exe_articles
+    set ea_title=#{atcTitle},
+        ea_content=#{atcCnt},
+        ea_image=#{atcPic},
+        ea_author=#{atcAuthor},
+        ea_extra_info1=#{atcSize}
+    where ea_id=#{atcId}
+  </update>
+
+  <delete id='deleteArticle' parameterType='Integer'>
+    delete from exe_articles where ea_id=#{atcId}
+  </delete>
+
+</mapper>

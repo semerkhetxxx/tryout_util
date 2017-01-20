@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="idv.replies.model.ReplyDAO">
+
+  <!-- Instead of referencing Fully Qualified Class Names we can register Aliases in mybatis-config.xml and use Alias names. -->
+  <resultMap type='ReplyVO' id='ReplyResult'>
+    <id property='replyId' column='er_id'/>
+    <result property='replyAtc' column='er_article'/>
+    <result property='replyUser' column='er_user'/>
+    <result property='replyCnt' column='er_content'/>
+  </resultMap>
+  
+  
+  
+  <select id='getAllReplies' resultMap='ReplyResult'>
+   	select * from exe_replies
+  </select>
+  
+  <select id='getReplyByAtc' parameterType='Integer' resultMap='ReplyResult'>
+    select * from exe_replies where er_article = #{replyAtc}
+  </select>
+  
+  <select id='getReplyCount' parameterType='Integer' resultType='map'>
+  	select er_article, count(er_article) as reply_count
+  	from exe_replies, exe_articles
+  	where er_article= ea_id
+  	and ea_author = #{userNo}
+  	group by er_article
+  </select>	  
+
+  <insert id='insertReply' parameterType='ReplyVO'>
+   	insert into exe_replies (er_id, er_article, er_user, er_content)
+   	values (#{replyId},#{replyAtc},#{replyUser},#{replyCnt})
+  </insert>
+
+  <update id='updateReply' parameterType='ReplyVO'>
+    update exe_replies
+    set er_id=#{replyId},
+        er_article=#{replyAtc},
+        er_user=#{replyUser},
+        er_content=#{replyCnt}
+    where er_id=#{replyId}
+  </update>
+
+  <delete id='deleteReply' parameterType='Integer'>
+    delete from exe_replies where er_id=#{replyId}
+  </delete>
+
+</mapper>

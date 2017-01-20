@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						   http://www.springframework.org/schema/beans/spring-beans.xsd
+						   http://www.springframework.org/schema/tx
+						   http://www.springframework.org/schema/tx/spring-tx.xsd
+						   http://www.springframework.org/schema/context
+						   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						   http://www.springframework.org/schema/task
+						   http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+	<context:component-scan base-package="idv.tryout.dao"/>
+		
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
+	    <property name="maximumPoolSize" value="50" />
+	  
+	    <property name="minimumIdle" value="20" />
+	    
+	    <property name="dataSourceProperties">
+	        <props>
+				<prop key="url">jdbc:mysql://localhost:3306/tryout_1?useUnicode=true&amp;characterEncoding=utf-8</prop>
+				<prop key="user">root</prop>
+				<prop key="password">stardust</prop>            
+	        </props>
+	    </property>
+	</bean>
+	
+	<bean id="eventDS" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+	    <constructor-arg ref="hikariConfig" />
+	</bean>
+
+	<bean id="eventSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation"
+			value="classpath:tryout-mybatis-config.xml" />
+		<property name="dataSource" ref="eventDS" />
+	</bean>
+
+	<!--<bean id="userDao" class="idv.tryout.dao.UserDAO">-->
+		<!--<property name="sqlSessionFactory" ref="eventSqlSessionFactory" />-->
+	<!--</bean>-->
+
+	<!--<bean id="replyDao" class="idv.tryout.dao.ReplyDAO">-->
+		<!--<property name="sqlSessionFactory" ref="eventSqlSessionFactory" />-->
+	<!--</bean>-->
+
+	<!--<bean id="atcDao" class="idv.tryout.dao.ArticleDAO">-->
+		<!--<property name="sqlSessionFactory" ref="eventSqlSessionFactory" />-->
+	<!--</bean>-->
+    <!-- Service Object -->
+    <bean id="tryoutService" class="idv.tryout.service.impl.TryoutServiceImpl">
+        <!--<property name="userDao">-->
+            <!--<ref bean="userDao"/>-->
+        <!--</property>-->
+        <!--<property name="replyDao">-->
+            <!--<ref bean="replyDao"/>-->
+        <!--</property>-->
+        <!--<property name="atcDao">-->
+            <!--<ref bean="atcDao"/>-->
+        <!--</property>-->
+    </bean>
+	
+	
+</beans>
+
+
+
+
